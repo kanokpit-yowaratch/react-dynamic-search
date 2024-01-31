@@ -165,7 +165,7 @@ function SearchWithPagination() {
                                         {row.avatar}
                                     </TableCell>
                                     <TableCell component="th" scope="row">
-                                        {row.first_name + '-' + row.last_name}
+                                        {row.first_name + ' ' + row.last_name}
                                     </TableCell>
                                     <TableCell style={{ width: 160 }}>
                                         {row.email}
