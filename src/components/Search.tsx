@@ -158,19 +158,28 @@ function SearchWithPagination() {
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableBody>
-                        {(datas).map((row) => (
-                            <TableRow key={row.first_name + '-' + row.last_name}>
-                                <TableCell style={{ width: 70 }} align="center">
-                                    {row.avatar}
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    {row.first_name + '-' + row.last_name}
-                                </TableCell>
-                                <TableCell style={{ width: 160 }}>
-                                    {row.email}
+                        {datas.length !== 0 &&
+                            (datas).map((row) => (
+                                <TableRow key={row.first_name + '-' + row.last_name}>
+                                    <TableCell style={{ width: 70 }} align="center">
+                                        {row.avatar}
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {row.first_name + '-' + row.last_name}
+                                    </TableCell>
+                                    <TableCell style={{ width: 160 }}>
+                                        {row.email}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        }
+                        {datas.length === 0 &&
+                            <TableRow key="no-data-available">
+                                <TableCell colSpan={3} align="center">
+                                    No data available
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        }
                     </TableBody>
                     <TableFooter>
                         <TableRow>
