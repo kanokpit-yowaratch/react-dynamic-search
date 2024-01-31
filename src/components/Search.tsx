@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
@@ -14,7 +14,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import { Container, TextField } from '@mui/material';
+import { Container, TableHead, TextField, styled } from '@mui/material';
 import axios from 'axios';
 import debounce from "lodash/debounce";
 
@@ -27,6 +27,17 @@ interface TablePaginationActionsProps {
         newPage: number,
     ) => void;
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+        fontWeight: 600,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
 
 function TablePaginationActions(props: TablePaginationActionsProps) {
     const theme = useTheme();
@@ -145,6 +156,7 @@ function SearchWithPagination() {
 
     return (
         <Container maxWidth="lg" sx={{ p: 2 }}>
+            <h2>React dynamic search</h2>
             <Box sx={{ mb: 2 }}>
                 <TextField
                     label="Search"
@@ -157,17 +169,20 @@ function SearchWithPagination() {
             </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell>Email</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
                     <TableBody>
                         {datas && datas.length !== 0 &&
                             (datas).map((row) => (
                                 <TableRow key={row.first_name + '-' + row.last_name}>
-                                    <TableCell style={{ width: 70 }} align="center">
-                                        {row.avatar}
-                                    </TableCell>
                                     <TableCell component="th" scope="row">
                                         {row.first_name + ' ' + row.last_name}
                                     </TableCell>
-                                    <TableCell style={{ width: 160 }}>
+                                    <TableCell>
                                         {row.email}
                                     </TableCell>
                                 </TableRow>
