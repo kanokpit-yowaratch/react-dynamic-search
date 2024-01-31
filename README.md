@@ -22,3 +22,7 @@ npm run build
 ```
 REACT_APP_API_URL="http://localhost:4000/users"
 ```
+
+## API
+
+Example api logic: [express-mysql-api-pagination](https://github.com/kanokpit-yowaratch/express-mysql-api-pagination)
