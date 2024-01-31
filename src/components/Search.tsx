@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -14,8 +14,9 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import { Container, TextField } from '@mui/material';
 import axios from 'axios';
-import { Container } from '@mui/material';
+import debounce from "lodash/debounce";
 
 interface TablePaginationActionsProps {
     count: number;
@@ -88,13 +89,15 @@ function SearchWithPagination() {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [datas, setDatas] = useState<any[]>([]);
     const [total, setTotal] = useState(0);
+    const [keyword, setKeyword] = useState('');
 
-    const fetchData = async (pageIndex: number, limit: number) => {
+    const fetchData = async (pageIndex: number, limit: number, search: string = '') => {
         const apiEndpoint = `${process.env.REACT_APP_API_URL}`;
         const queryParams = {
             params: {
                 page: pageIndex,
-                limit: limit
+                limit: limit,
+                search: search
             }
         }
         await axios.get(apiEndpoint, queryParams)
@@ -121,7 +124,7 @@ function SearchWithPagination() {
         newPage: number,
     ) => {
         setPage(newPage);
-        fetchData(newPage, rowsPerPage);
+        fetchData(newPage, rowsPerPage, keyword);
     };
 
     const handleChangeRowsPerPage = (
@@ -130,11 +133,28 @@ function SearchWithPagination() {
         const newLimit = parseInt(event.target.value, 10);
         setRowsPerPage(newLimit);
         setPage(0);
-        fetchData(0, newLimit);
+        fetchData(0, newLimit, keyword);
     };
+
+    const handleSearch = (query: string) => {
+        setKeyword(query);
+        fetchData(page, rowsPerPage, query);
+    }
+
+    const debouncedHandleSearch = useCallback(debounce(handleSearch, 1000), []);
 
     return (
         <Container maxWidth="lg" sx={{ p: 2 }}>
+            <Box sx={{ mb: 2 }}>
+                <TextField
+                    label="Search"
+                    id="outlined-size-small"
+                    placeholder="Search: name, email"
+                    defaultValue=""
+                    size="small"
+                    onChange={(e) => debouncedHandleSearch(e.target.value)}
+                />
+            </Box>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableBody>

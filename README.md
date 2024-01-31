@@ -3,7 +3,7 @@ Dynamic search application with React
 
 
 ## Tech Stack, Lib, Tools
-`React`, `Axios`, `MUI`
+`React`, `Axios`, `lodash`, `MUI`
 
 
 ## Run the app
