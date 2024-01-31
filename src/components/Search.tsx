@@ -158,7 +158,7 @@ function SearchWithPagination() {
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                     <TableBody>
-                        {datas.length !== 0 &&
+                        {datas && datas.length !== 0 &&
                             (datas).map((row) => (
                                 <TableRow key={row.first_name + '-' + row.last_name}>
                                     <TableCell style={{ width: 70 }} align="center">
@@ -173,7 +173,7 @@ function SearchWithPagination() {
                                 </TableRow>
                             ))
                         }
-                        {datas.length === 0 &&
+                        {datas && datas.length === 0 &&
                             <TableRow key="no-data-available">
                                 <TableCell colSpan={3} align="center">
                                     No data available
