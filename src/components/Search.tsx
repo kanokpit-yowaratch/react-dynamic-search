@@ -17,6 +17,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { Container, TableHead, TextField, styled } from '@mui/material';
 import axios from 'axios';
 import debounce from "lodash/debounce";
+import { SearchParam } from '../interfaces/common.interface';
 
 interface TablePaginationActionsProps {
     count: number;
@@ -104,13 +105,14 @@ function SearchWithPagination() {
 
     const fetchData = async (pageIndex: number, limit: number, search: string = '') => {
         const apiEndpoint = `${process.env.REACT_APP_API_URL}`;
-        const queryParams = {
-            params: {
-                page: pageIndex,
-                limit: limit,
-                search: search
-            }
+        let params: SearchParam = {
+            page: (pageIndex + 1),
+            limit: limit
+        };
+        if (search) {
+            params = { ...params, search };
         }
+        const queryParams = { params };
         await axios.get(apiEndpoint, queryParams)
             .then((response) => {
                 if (response.data) {
