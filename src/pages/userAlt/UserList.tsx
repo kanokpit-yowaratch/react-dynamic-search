@@ -17,7 +17,7 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import { Container, TableHead, TextField, styled } from '@mui/material';
 import axios from 'axios';
 import debounce from "lodash/debounce";
-import { SearchParam } from '../interfaces/common.interface';
+import { SearchParam } from '../../interfaces/common.interface';
 
 interface TablePaginationActionsProps {
     count: number;
