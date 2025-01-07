@@ -13,16 +13,15 @@ import { initialPageProps, pagingConfig } from '../../constants';
 const UserList = () => {
 	const dispatch = useDispatch();
 	const users = useSelector((state: { user: UserState }) => state.user.users);
-	const pagination = useSelector((state: { user: UserState }) => state.user.pagination);
 
 	useEffect(() => {
 		store.dispatch(fetchUsers({ pagination: initialPageProps }));
 	}, [dispatch]);
 
-	const onPagingChange = ({ current, pageSize }: any) => {
+	const onPagingChange = ({ currentPage, limit }: any) => {
 		const pageProps = {
-			pageSize,
-			current
+			limit,
+			currentPage
 		};
 		store.dispatch(fetchUsers({ pagination: pageProps }));
 	};
@@ -38,7 +37,7 @@ const UserList = () => {
 		{
 			title: 'No.',
 			render: (_, __, index) => {
-				const no = (index + 1 + ((pagination.currentPage - 1) * pagination.limit));
+				const no = (index + 1 + ((users.pagination.currentPage - 1) * users.pagination.limit));
 				return no;
 			},
 			align: 'center',
@@ -47,15 +46,22 @@ const UserList = () => {
 		{
 			title: 'Name',
 			dataIndex: 'first_name',
-			render: (_, { first_name, last_name }, index) => {
-				const fullName = `${first_name} ${last_name ? last_name : ''}`;
-				return fullName;
+			render: (_, { firstName, lastName }, index) => {
+				return firstName && lastName ? `${firstName} ${lastName ? lastName : ''}` : '-';
 			},
 			width: 72,
 		},
 		{
-			title: 'Email',
+			title: 'Username | Email',
 			dataIndex: 'email',
+			render: (_, { username, email }, index) => {
+				return email ? email : username;
+			},
+			width: 72,
+		},
+		{
+			title: 'Role',
+			dataIndex: 'role',
 			width: 72,
 		}
 	];
@@ -78,9 +84,9 @@ const UserList = () => {
 					rowKey={(record: User) => `${record.id}-${record.username}`}
 					rowSelection={undefined}
 					className="table-striped-rows user-table"
-					dataSource={users}
+					dataSource={users.data}
 					columns={columns}
-					pagination={{ ...pagingConfig, ...pagination }}
+					pagination={{ ...pagingConfig, ...users.pagination }}
 					onChange={onPagingChange}
 					bordered
 				/>

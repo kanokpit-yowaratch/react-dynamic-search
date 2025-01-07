@@ -1,3 +1,5 @@
+import { Pagination } from "../constants";
+
 export interface SearchParam {
     page: number;
     limit: number;
@@ -10,15 +12,20 @@ export interface UserTemplate {
 }
 
 export interface User extends UserTemplate {
-    fname: string;
-    lname: string;
-    avatar: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+}
+
+export interface ResponseData {
+    data: any[];
+    total: number;
+    pagination: Pagination;
 }
 
 export interface UserState {
-    users: any[]
+    users: ResponseData;
     currentUser: any;
     loading: boolean;
     error: any;
-    pagination: any;
 };

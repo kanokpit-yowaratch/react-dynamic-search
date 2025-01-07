@@ -1,28 +1,22 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Pagination } from '../constants';
+import { initialData } from '../constants';
 import { User, UserState } from '../interfaces/common.interface';
 
-const currentUser = {
-  id: 0,
+const currentUser: User = {
+  id: '',
   email: '',
-  name: '',
-  phoneNumber: ''
-}
-
-const pagination: Pagination = {
-  currentPage: 1,
-  limit: 10,
-  pages: 1,
-  total: 10
+  username: '',
+  firstName: '',
+  lastName: '',
+  avatar: undefined
 }
 
 const initialState: UserState = {
-  users: [],
+  users: initialData,
   currentUser,
   loading: false,
-  error: null,
-  pagination
+  error: null
 };
 
 const apiUrl = process.env.REACT_APP_API_URL;
@@ -36,8 +30,8 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async (options: a
     conditionList.push(`search=${vSearch}`);
   }
   if (pagination) {
-    conditionList.push(`limit=${pagination.pageSize}`);
-    conditionList.push(`page=${pagination.current}`);
+    conditionList.push(`limit=${pagination.limit}`);
+    conditionList.push(`page=${pagination.currentPage}`);
 
   }
   if (conditionList.length > 0) {
@@ -45,7 +39,7 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async (options: a
   }
   const apiGetUsers = `${apiUrl}${queryString}`;
   const response = await axios.get(apiGetUsers).catch(err => console.log(err));
-  return response && response.data ? response.data : [];
+  return response && response.data ? response.data : initialData;
 });
 
 export const fetchUser = createAsyncThunk('users/fetchUser', async (userId: string) => {
@@ -90,22 +84,24 @@ const sliceOptions: any = {
         (state: UserState, action: any) => {
           state.loading = false;
           if (action.type.includes('fetchUsers')) {
-            const { data = [], currentPage = 1, limit = 5, pages = 1, total = 5 } = action.payload;
-            state.users = data;
-            state.pagination = { currentPage, limit, pages, total };
+            const { data = [], total = 5 } = action.payload;
+            const { pagination } = action.payload;
+            state.users.data = data;
+            state.users.total = total;
+            state.users.pagination = pagination;
           } else if (action.type.includes('fetchUser')) {
             state.currentUser = action.payload;
           } else if (action.type.includes('clearUser')) {
             state.currentUser = action.payload;
           } else if (action.type.includes('createUser')) {
-            state.users.push(action.payload);
+            state.users.data.push(action.payload);
           } else if (action.type.includes('editUser')) {
-            const index = state.users.findIndex((user: any) => user.id === action.payload.id);
+            const index = state.users.data.findIndex((user: any) => user.id === action.payload.id);
             if (index !== -1) {
-              state.users[index] = action.payload;
+              state.users.data[index] = action.payload;
             }
           } else if (action.type.includes('deleteUser')) {
-            state.users = state.users.filter((user: any) => user.id !== action.payload);
+            state.users.data = state.users.data.filter((user: any) => user.id !== action.payload);
           }
         },
       )

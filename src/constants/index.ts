@@ -11,22 +11,37 @@ const pagingConfig: TablePaginationConfig = {
 };
 
 interface PageProps {
-  total: number;
-  pageSize: number;
-  current: number;
+  limit: number;
+  currentPage: number;
 }
 
 const initialPageProps: PageProps = {
-  total: 0,
-  pageSize: 10,
-  current: 1,
+  limit: 10,
+  currentPage: 1,
 };
+
+export interface InitData<T = any> {
+  data: Array<T>; // Blog[];
+  total: number;
+  pagination: Pagination;
+}
 
 export type Pagination = {
   currentPage: number;
   limit: number;
   pages: number;
-  total: number;
+}
+
+export const initialPagination: Pagination = {
+  currentPage: 1,
+  limit: 5,
+  pages: 1
+}
+
+export const initialData: InitData = {
+  data: [],
+  total: 0,
+  pagination: initialPagination,
 }
 
 export { pagingConfig, initialPageProps };
